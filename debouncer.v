@@ -5,15 +5,16 @@ module debouncer #(
     input wire clk,           // System clock
     input wire rst_n,         // Active low reset
     input wire button_in,     // Raw button input (noisy, active low)
-    output button_out1     // Debounced button output (active low)
+    output button_out_n       // Debounced button output (active low)
 );
-	
     localparam COUNTER_MAX = (CLK_FREQ / 1000) * DEBOUNCE_TIME_MS;
     localparam COUNTER_WIDTH = $clog2(COUNTER_MAX + 1);
-	 reg button_out;
+	
+	reg button_out;
     reg [COUNTER_WIDTH-1:0] counter;
     reg button_sync_0, button_sync_1;
-	 assign button_out1 = ~button_out;
+	
+	assign button_out_n = ~button_out;
 
     always @(posedge clk) begin
         if (!rst_n) begin                   // FIX: Evaluate reset as active low
