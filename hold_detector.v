@@ -6,11 +6,11 @@ module hold_detector #(parameter MAX_HOLD = 50000000, MAX_REPEAT = 25000000) (
 );
 	reg [$clog2(MAX_HOLD)-1 : 0] next_value;
 	reg [$clog2(MAX_HOLD)-1 : 0] out_value;
+	
 	assign out = (out_value == MAX_HOLD - 1); 
 	
 	always @(posedge clk) begin
 		if(!rst) begin
-			//reset
 			out_value <= 0;
 		end
 		else begin		
@@ -25,8 +25,4 @@ module hold_detector #(parameter MAX_HOLD = 50000000, MAX_REPEAT = 25000000) (
 			default: next_value = 0;
 		endcase
 	end
-	
-		
-		
-	
 endmodule
