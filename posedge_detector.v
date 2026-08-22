@@ -10,6 +10,4 @@ module posedge_detector(
 	always @(posedge clk) begin
 		temp <= in;
 	end
-	
-	
 endmodule
