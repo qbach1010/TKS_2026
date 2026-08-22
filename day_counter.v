@@ -8,13 +8,11 @@ module day_counter (
 	output max
 );
 	reg [4:0] next_value;
-	
 
 	assign max = (out_value[4:2] == 3'b111 & out_value[1:0] == days_in_month); 
 	
 	always @(posedge clk) begin
 		if(!rst) begin
-			//reset
 			out_value <= 0;
 		end
 		else begin
@@ -34,8 +32,5 @@ module day_counter (
 			default: next_value = 0;
 		endcase
 	end
-	
-		
-		
 	
 endmodule
