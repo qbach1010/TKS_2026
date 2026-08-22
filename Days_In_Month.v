@@ -3,11 +3,10 @@ module Days_In_Month (
 	input [3:0] year_value,
 	input [3:0] month_value,
 	output [1:0] days_in_month
-
 );
-	wire leap = ((|year_BCD) | (~|year_value[3:2])) & (~|year_value[1:0])  ;
+	reg full, not_feb;
 	
-	reg full , not_feb; 
+	wire leap = ((|year_BCD) | (~|year_value[3:2])) & (~|year_value[1:0]);
 	
 	assign days_in_month[0] = not_feb ? full : leap;
 	assign days_in_month[1] = not_feb;
@@ -30,7 +29,5 @@ module Days_In_Month (
 			4'd12: full = 1;
 		endcase
 	end
-
-	
 
 endmodule
