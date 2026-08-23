@@ -1,4 +1,4 @@
-module counter #(parameter MAX_VALUE = 60) (
+module counter #(parameter MAX_VALUE = 60, MIN_VALUE = 0, INIT_VALUE = 0) (
 	input clk,
 	input rst,
 	input en, 
@@ -8,11 +8,11 @@ module counter #(parameter MAX_VALUE = 60) (
 );
 	reg [$clog2(MAX_VALUE) - 1 : 0] next_value;
 
-	assign max = (mode == 1'b0) ? (out_value == MAX_VALUE - 1) : (out_value == 0);
+	assign max = (mode == 1'b0) ? (out_value == MAX_VALUE - 1) : (out_value == MIN_VALUE);
 	
 	always @(posedge clk) begin
 		if(!rst) begin
-			out_value <= 0;
+			out_value <= INIT_VALUE;
 		end
 		else begin
 			if(en) begin				
@@ -27,7 +27,7 @@ module counter #(parameter MAX_VALUE = 60) (
 	always @(out_value, mode, max) begin
 		if (mode == 1'b0) begin 
 			if (max) 
-				next_value = 0;
+				next_value = MIN_VALUE;
          	else 
 				next_value = out_value + 1'b1;
       	end else begin          
