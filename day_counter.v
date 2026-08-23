@@ -13,7 +13,7 @@ module day_counter (
 	
 	always @(posedge clk) begin
 		if(!rst) begin
-			out_value <= 0;
+			out_value <= 5'd1;
 		end
 		else begin
 			if(en) begin				
@@ -29,7 +29,7 @@ module day_counter (
 		case({mode, max})
 			2'b00: next_value = out_value + 1'b1; 
 			2'b10: next_value = out_value - 1'b1;
-			default: next_value = 0;
+			default: next_value = 1;
 		endcase
 	end
 	
