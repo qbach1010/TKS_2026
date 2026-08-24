@@ -26,11 +26,17 @@ module day_counter (
 	end
 	
 	always @(out_value, mode, max) begin
-		case({mode, max})
-			2'b00: next_value = out_value + 1'b1; 
-			2'b10: next_value = out_value - 1'b1;
-			default: next_value = 1;
-		endcase
+		if (mode == 1'b0) begin 
+			if (max) 
+				next_value = 5'd1;
+         	else 
+				next_value = out_value + 1'b1;
+      	end else begin          
+         	if (max) 
+				next_value = {3'b111, days_in_month};
+         	else 
+            	next_value = out_value - 1'b1;
+      	end
 	end
 	
 endmodule
