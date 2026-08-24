@@ -9,7 +9,7 @@ module day_counter (
 );
 	reg [4:0] next_value;
 
-	assign max = (out_value[4:2] == 3'b111 & out_value[1:0] == days_in_month); 
+	assign max = (mode == 1'b0) ? (out_value[4:2] == 3'b111 & out_value[1:0] == days_in_month) : (out_value == 5'd1);
 	
 	always @(posedge clk) begin
 		if(!rst) begin
