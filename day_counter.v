@@ -8,8 +8,9 @@ module day_counter (
 	output max
 );
 	reg [4:0] next_value;
-
-	assign max = (mode == 1'b0) ? (out_value[4:2] == 3'b111 & out_value[1:0] == days_in_month) : (out_value == 5'd1);
+	assign max = (out_value[4:2] == 3'b111 & out_value[1:0] == days_in_month);
+	assign min = (out_value == 5'd1);
+	assign crit = (mode == 1'b0) ? max : min;
 	
 	always @(posedge clk) begin
 		if(!rst) begin
@@ -27,12 +28,12 @@ module day_counter (
 	
 	always @(out_value, mode, max) begin
 		if (mode == 1'b0) begin 
-			if (max) 
+			if (crit) 
 				next_value = 5'd1;
          	else 
 				next_value = out_value + 1'b1;
       	end else begin          
-         	if (max) 
+			if (crit) 
 				next_value = {3'b111, days_in_month};
          	else 
             	next_value = out_value - 1'b1;
