@@ -7,8 +7,9 @@ module counter #(parameter MAX_VALUE = 60, MIN_VALUE = 0, INIT_VALUE = 0) (
 	output max
 );
 	reg [$clog2(MAX_VALUE) - 1 : 0] next_value;
-
-	assign max = (mode == 1'b0) ? (out_value == MAX_VALUE - 1) : (out_value == MIN_VALUE);
+	assign max = (out_value == MAX_VALUE - 1);
+	assign min = (out_value == MIN_VALUE);
+	assign crit = (mode == 1'b0) ? max : min;
 	
 	always @(posedge clk) begin
 		if(!rst) begin
@@ -26,12 +27,12 @@ module counter #(parameter MAX_VALUE = 60, MIN_VALUE = 0, INIT_VALUE = 0) (
 	
 	always @(out_value, mode, max) begin
 		if (mode == 1'b0) begin 
-			if (max) 
+			if (crit) 
 				next_value = MIN_VALUE;
          	else 
 				next_value = out_value + 1'b1;
-      	end else begin          
-         	if (max) 
+      	end else begin
+			if (crit) 
             	next_value = MAX_VALUE - 1;
          	else 
             	next_value = out_value - 1'b1;
