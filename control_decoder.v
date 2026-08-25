@@ -21,7 +21,7 @@ module control_decoder (
 
         en_val_0[0] = max_val[0];
 
-        for (int i=1; i<6; i = i+1)
+        for (i=1; i<6; i = i+1)
             en_val_0[i] = &max_val[i:0];
     end
     
