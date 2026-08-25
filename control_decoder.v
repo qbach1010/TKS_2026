@@ -22,7 +22,7 @@ module control_decoder (
         en_val_0[0] = max_val[0];
 
         for (i=1; i<6; i = i+1)
-            en_val_0[i] = en_val_0[i-1] & critical_val[i];
+            en_val_0[i] = en_val_0[i-1] & max_val[i];
     end
     
     assign en_val = set[1] ? en_val_1 : en_val_0;
