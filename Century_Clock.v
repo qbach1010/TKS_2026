@@ -35,7 +35,7 @@ module Century_Clock (
         .tag(tag)
     );
 
-    control_decoder ctrl_inst (
+    control_encoder ctrl_inst (
         .tag(tag),
         .set(set),
         .set_field(set_field),
