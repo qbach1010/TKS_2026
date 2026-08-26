@@ -1,11 +1,11 @@
 module Century_Clock (
-    input clk,               // Xung nhịp hệ thống (50MHz)
-    input rst_n,             // Reset tích cực mức thấp
-    input press,             // Nút nhấn tăng giá trị (Active low)
-    input [1:0] set,         // set[1]: Cho phép chỉnh sửa, set[0]: mode (1 = rise, 0 = fall)
-    input [2:0] set_field,   // Chọn vùng cần chỉnh (000: Giây -> 101: Năm)
-    input date_time,         // Switch chuyển đổi hiển thị: 1 = Giờ, 0 = Ngày
-    output [55:0] LED        // Kết nối trực tiếp với 8 LED 7 thanh
+    input clk,               // System's clock (50MHz)
+    input rst_n,             // Reset active low
+    input press,             // Press button to set value (active low)
+    input [1:0] set,         // set[1]: settable, set[0]: mode (1 = rise, 0 = fall)
+    input [2:0] set_field,   // 000: second -> 101: year
+    input date_time,         // Switch to display: 1 = time, 0 = date
+    output [55:0] LED        // 8 x 7-segment LEDs
 );
 
     wire clean_press, tag, mode;
@@ -25,7 +25,7 @@ module Century_Clock (
         .clk(clk), 
         .rst_n(rst_n), 
         .button_in(press), 
-        .button_out_n(clean_press)
+        .button_out(clean_press)
     );
     
     tag_detector tag_inst (
@@ -44,45 +44,45 @@ module Century_Clock (
         .en_val(en_val)
     );
 
-    // Bộ đếm Micro-second: Tạo xung 1Hz, rộng 20ns từ Clock 50MHz
+    // Micro-second counter: generate 1Hz-frequency signal to enable counters, from system's clock 50MHz
     counter #( .MAX_VAL(49999999), .MIN_VAL(0), .INIT_VAL(0) ) micro_counter (
         .en(1'b1), .mode(1'b0), .clk(clk), .rst_n(rst_n), 
         .count_val(),
         .critical(critical_val[0])
     );
 
-    // Bộ đếm Giây (Index 0 của set_field và en_val)
+    // Second counter (Index 0 of set_field and en_val)
     counter #( .MAX_VAL(59), .MIN_VAL(0), .INIT_VAL(0) ) second_counter (
         .en(en_val[0]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(second_val), .critical(critical_val[1])
     );
 
-    // Bộ đếm Phút (Index 1)
+    // Minute counter (Index 1)
     counter #( .MAX_VAL(59), .MIN_VAL(0), .INIT_VAL(0) ) minute_counter (
         .en(en_val[1]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(minute_val), .critical(critical_val[2])
     );
 
-    // Bộ đếm Giờ (Index 2)
+    // Hour counter (Index 2)
     counter #( .MAX_VAL(23), .MIN_VAL(0), .INIT_VAL(0) ) hour_counter (
         .en(en_val[2]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(hour_val), .critical(critical_val[3])
     );
 
-    // Bộ đếm Ngày (Index 3 - Dùng counter_day riêng biệt vì số ngày thay đổi)
+    // Day counter (Index 3)
     counter_day day_counter (
         .en(en_val[3]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .days_in_month(days_in_month), 
         .count_val(day_val), .critical(critical_val[4])
     );
 
-    // Bộ đếm Tháng (Index 4)
+    // Month counter (Index 4)
     counter #( .MAX_VAL(12), .MIN_VAL(1), .INIT_VAL(1) ) month_counter (
         .en(en_val[4]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(month_val), .critical(critical_val[5])
     );
 
-    // Bộ đếm Năm (Index 5)
+    // Year counter (Index 5)
     counter #( .MAX_VAL(9999), .MIN_VAL(0), .INIT_VAL(2026) ) year_counter (
         .en(en_val[5]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(year_val), .critical()
