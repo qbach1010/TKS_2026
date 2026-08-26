@@ -76,14 +76,14 @@ module Century_Clock (
         .count_val(day_val), .critical(critical_val[4])
     );
 
-    // Bộ đếm Tháng (Index 4 - Min là 1, Max là 12)
-    counter #( .MAX_VAL(12), .MIN_VAL(1), .INIT_VAL(0) ) month_counter (
+    // Bộ đếm Tháng (Index 4)
+    counter #( .MAX_VAL(12), .MIN_VAL(1), .INIT_VAL(1) ) month_counter (
         .en(en_val[4]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(month_val), .critical(critical_val[5])
     );
 
     // Bộ đếm Năm (Index 5)
-    counter #( .MAX_VAL(9999), .MIN_VAL(0), .INIT_VAL(2026)) year_counter (
+    counter #( .MAX_VAL(9999), .MIN_VAL(0), .INIT_VAL(2026) ) year_counter (
         .en(en_val[5]), .mode(mode), .clk(clk), .rst_n(rst_n), 
         .count_val(year_val), .critical()
     );
