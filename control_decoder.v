@@ -2,13 +2,14 @@ module control_decoder (
     input tag,
     input[1:0] set,
     input[2:0] set_field,
-    input[5:0] max_val,    // {month_max, day, hour, minute, second, micro-second}
+    input[5:0] critical_val,    // {month_critical, day, hour, minute, second, micro-second}
     output mode,
-    output [5:0] en_val  // {en_year, en_month, en_day, en_hour, en_minute, en_second}
+    output[5:0] en_val  // {en_year, en_month, en_day, en_hour, en_minute, en_second}
 );
     reg[5:0] en_val_0, en_val_1;
+    integer i;
 
-    always @ (tag, set, set_field, max_val) begin
+    always @ (tag, set, set_field, critical_val) begin
         case (set_field)
             3'b000: en_val_1 = {5'b0, tag};
             3'b001: en_val_1 = {4'b0, tag, 1'b0};
@@ -19,13 +20,13 @@ module control_decoder (
             default: en_val_1 = 6'b0;
         endcase
 
-        en_val_0[0] = max_val[0];
+        en_val_0[0] = critical_val[0];
 
         for (i=1; i<6; i = i+1)
-            en_val_0[i] = en_val_0[i-1] & max_val[i];
+            en_val_0[i] = en_val_0[i-1] & critical_val[i];
     end
     
     assign en_val = set[1] ? en_val_1 : en_val_0;
-    assign mode = &set;
+    assign mode = set[0];
 
 endmodule

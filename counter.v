@@ -1,42 +1,24 @@
-module counter #(parameter MAX_VALUE = 60, MIN_VALUE = 0, INIT_VALUE = 0) (
-	input clk,
-	input rst,
-	input en, 
-	input mode,
-	output reg [$clog2(MAX_VALUE) - 1 : 0] out_value, 
-	output max
+module counter # (parameter MAX_VAL = 59, MIN_VAL = 0, INIT_VAL = 0)(
+    input en, mode, clk, rst_n,
+    output reg [$clog2(MAX_VAL - MIN_VAL + 1) - 1 : 0] count_val = INIT_VAL,
+    output critical
 );
-	reg [$clog2(MAX_VALUE) - 1 : 0] next_value;
-	assign max = (out_value == MAX_VALUE - 1);
-	assign min = (out_value == MIN_VALUE);
-	assign crit = (mode == 1'b0) ? max : min;
-	
-	always @(posedge clk) begin
-		if(!rst) begin
-			out_value <= INIT_VALUE;
-		end
-		else begin
-			if(en) begin				
-				out_value <= next_value;
-			end
-			else begin
-				out_value <= out_value;
-			end
-		end
-	end
-	
-	always @(out_value, mode, max) begin
-		if (mode == 1'b0) begin 
-			if (crit) 
-				next_value = MIN_VALUE;
-         	else 
-				next_value = out_value + 1'b1;
-      	end else begin
-			if (crit) 
-            	next_value = MAX_VALUE - 1;
-         	else 
-            	next_value = out_value - 1'b1;
-      	end
-	end
-	
+
+    reg [$clog2(MAX_VAL - MIN_VAL + 1) - 1 : 0] count_next;
+
+    assign critical = mode ? (count_val == MIN_VAL) : (count_val == MAX_VAL);
+    
+    always @ (mode, critical)
+        case ({mode, critical})
+            2'b00: count_next = count_val + 1;
+            2'b01: count_next = MIN_VAL;
+            2'b10: count_next = count_val - 1;
+            2'b11: count_next = MAX_VAL;
+            default: count_next = 0;
+        endcase
+    
+    always @ (posedge clk)
+        if (!rst_n) count_val <= INIT_VAL;
+        else count_val <= en ? count_next : count_val;
+
 endmodule
