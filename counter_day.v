@@ -18,7 +18,7 @@ module counter_day (
 
     assign critical = mode ? (count_val == 1) : (count_val == max_day);
     
-    always @ (mode, critical)
+    always @ (mode, critical, count_val, max_day)
         case ({mode, critical})
             2'b00: count_next = count_val + 1;
             2'b01: count_next = 1;
