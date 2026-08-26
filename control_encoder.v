@@ -1,4 +1,4 @@
-module control_decoder (
+module control_encoder (
     input tag,
     input[1:0] set,
     input[2:0] set_field,
@@ -10,13 +10,14 @@ module control_decoder (
     integer i;
 
     always @ (tag, set, set_field, critical_val) begin
+        en_val_1 = 6'b0;
         case (set_field)
-            3'b000: en_val_1 = {5'b0, tag};
-            3'b001: en_val_1 = {4'b0, tag, 1'b0};
-            3'b010: en_val_1 = {3'b0, tag, 2'b0};
-            3'b011: en_val_1 = {2'b0, tag, 3'b0};
-            3'b100: en_val_1 = {1'b0, tag, 4'b0};
-            3'b101: en_val_1 = {tag, 5'b0};
+            3'b000: en_val_1[0] = tag;
+            3'b001: en_val_1[1] = tag;
+            3'b010: en_val_1[2] = tag;
+            3'b011: en_val_1[3] = tag;
+            3'b100: en_val_1[4] = tag;
+            3'b101: en_val_1[5] = tag;
             default: en_val_1 = 6'b0;
         endcase
 
