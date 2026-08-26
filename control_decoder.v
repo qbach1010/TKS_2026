@@ -7,6 +7,9 @@ module control_decoder (
     output [5:0] en_val  // {en_year, en_month, en_day, en_hour, en_minute, en_second}
 );
     reg[5:0] en_val_0, en_val_1;
+    
+    assign en_val = set[1] ? en_val_1 : en_val_0;
+    assign mode = &set;
 
     always @ (tag, set, set_field, max_val) begin
         case (set_field)
@@ -24,8 +27,5 @@ module control_decoder (
         for (i=1; i<6; i = i+1)
             en_val_0[i] = en_val_0[i-1] & max_val[i];
     end
-    
-    assign en_val = set[1] ? en_val_1 : en_val_0;
-    assign mode = &set;
 
 endmodule
