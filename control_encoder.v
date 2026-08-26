@@ -1,4 +1,4 @@
-module control_decoder (
+module control_encoder (
     input tag,
     input [1:0] set,
     input [2:0] set_field,
@@ -6,18 +6,18 @@ module control_decoder (
     output mode,
     output [5:0] en_val  // {en_year, en_month, en_day, en_hour, en_minute, en_second}
 );
-    integer i;
+    genvar i;
     reg [5:0] en_val_0, en_val_1;
     
     assign en_val = set[1] ? en_val_1 : en_val_0;
     assign mode = &set;
     assign en_val_0[0] = max_val[0]
 
-    always @(max_val) begin
+    generate
         for (i = 1; i < 6; i = i + 1) begin
             en_val_0[i] = &max_val[i:0]
         end
-    end
+    endgenerate
 
     always @(tag, set_field) begin
         en_val_1 = 6'b0;
