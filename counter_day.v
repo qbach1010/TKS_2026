@@ -4,7 +4,7 @@ module counter_day (
     output reg [4:0] count_val = 5'b1,
     output critical
 );
-	 reg [4:0] max_day;
+	reg [4:0] max_day;
     reg [4:0] count_next;
 
     always @ (days_in_month)
@@ -27,8 +27,12 @@ module counter_day (
             default: count_next = 0;
         endcase
     
-    always @ (posedge clk)
+    always @ (posedge clk) begin
         if (!rst_n) count_val <= 1;
-        else count_val <= en ? count_next : count_val;
+        else begin
+            if (count_val > max_day) count_val <= max_day;
+            else count_val <= en ? count_next : count_val;
+		end
+	end
 
 endmodule
