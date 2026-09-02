@@ -31,8 +31,8 @@ module LED_display (
     decode_BCD_7seg display_minute_tens (.BCD(minute_BCD[7:4]), .led(LED1[41:35]));
     decode_BCD_7seg display_minute_ones (.BCD(minute_BCD[3:0]), .led(LED1[34:28]));
 		
-	 // Two empty LEDs
-	 assign LED1[27:14] = {7'b1111111, 7'b1111111};
+    // Two empty LEDs
+    assign LED1[27:14] = {7'b1111111, 7'b1111111};
 	 
     decode_BCD_7seg display_second_tens (.BCD(second_BCD[7:4]), .led(LED1[13:7]));
     decode_BCD_7seg display_second_ones (.BCD(second_BCD[3:0]), .led(LED1[6:0]));
