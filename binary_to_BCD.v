@@ -11,10 +11,10 @@ module binary_to_BCD4 (
 
 		for (i = 4; i < 15; i = i + 1) begin
 
-            if (temp[17:14] >= 5) temp[17:14] = temp[17:14] + 3; // ones
-            if (temp[21:18] >= 5) temp[21:18] = temp[21:18] + 3; // tens
-            if (temp[25:22] >= 5) temp[25:22] = temp[25:22] + 3; // hundreds
-            if (temp[29:26] >= 5) temp[29:26] = temp[29:26] + 3; // thousands
+            if (temp[17:14] > 4) temp[17:14] = temp[17:14] + 3; // ones
+            if (temp[21:18] > 4) temp[21:18] = temp[21:18] + 3; // tens
+            if (temp[25:22] > 4) temp[25:22] = temp[25:22] + 3; // hundreds
+            if (temp[29:26] > 4) temp[29:26] = temp[29:26] + 3; // thousands
             
             temp = temp << 1;
 		end
@@ -55,7 +55,7 @@ module binary_to_BCD (
     input [4:0] hour_val,
     input [5:0] minute_val,
     input [5:0] second_val,
-	 input mode,
+	 input [1:0] set,
     output [15:0] year_BCD,
     output [7:0] month_BCD, day_BCD, hour_BCD, minute_BCD, second_BCD,
 	 output[1:0] days_in_month
@@ -70,5 +70,5 @@ module binary_to_BCD (
 	 
 	 find_days_in_month find (
       .year_BCD(year_BCD), .year_value_last_4(year_val[3:0]),
-      .month_value(month_val), .mode(mode), .days_in_month(days_in_month));
+      .month_value(month_val), .day_value(day_val), .set(set), .days_in_month(days_in_month));
 endmodule
