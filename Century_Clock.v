@@ -95,7 +95,7 @@ module Century_Clock (
         .hour_val(hour_val), 
         .minute_val(minute_val), 
         .second_val(second_val),
-        .mode(mode),
+        .set(set),
         
         .year_BCD(year_BCD), 
         .month_BCD(month_BCD), 
