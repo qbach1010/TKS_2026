@@ -76,7 +76,7 @@ module tb_Century_Clock();
         date_time = 1;
 
         // =======================================================
-        // SPEED HACK: Force micro-counter critical flag to 1
+        // Force micro-counter critical flag to 1
         // This guarantees the seconds increment every single clock cycle.
         // =======================================================
         force uut.critical_val[0] = 1;
@@ -85,7 +85,7 @@ module tb_Century_Clock();
 
         #100;
         rst_n = 1; 
-        $display("=== STARTING CLOCK ROLLOVER TESTS ===");
+        $display("=== COUNTING UP ===");
 
         // 1. Minute Rollover 
         $display("\n--- Minute Rollover ---");
@@ -117,6 +117,39 @@ module tb_Century_Clock();
         set_time(2026, 12, 31, 23, 59, 58);
         #100;
 
+	set = 2'b01;
+
+	$display("=== COUNTING DOWN ===");
+
+        // 1. Minute Rollover 
+        $display("\n--- Minute Rollover ---");
+        set_time(2026, 8, 26, 0, 10, 01);
+        #100;
+
+        // 2. Hour Rollover
+        $display("\n--- Hour Rollover ---");
+        set_time(2026, 8, 26, 6, 00, 01);
+        #100;
+        
+        // 3. Day Rollover
+        $display("\n--- Day Rollover ---");
+        set_time(2026, 8, 26, 00, 00, 02);
+        #100;
+
+        // 4. Leap Year Check (Feb 28 -> Feb 29)
+        $display("\n--- Leap Year Check (2026) ---");
+        set_time(2026, 3, 01, 00, 00, 02);
+        #100;
+
+        // 5. Leap Year Rollover (Feb 29 -> Mar 1)
+        $display("\n--- Leap Year Rollover (2024) ---");
+        set_time(2024, 3, 01, 00, 00, 02);
+        #100;
+
+        // 6. Year Rollover
+        $display("\n--- Year Rollover ---");
+        set_time(2026, 1, 01, 00, 00, 02);
+        #100;
         $display("\n=== ALL TESTS COMPLETED ===");
         $finish;
     end
