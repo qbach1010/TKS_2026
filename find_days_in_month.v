@@ -1,8 +1,9 @@
 module find_days_in_month (
-    input[7:0] year_BCD,
-    input[3:0] year_value_last_4,
-    input[3:0] month_value,
-    input mode,
+    input [7:0] year_BCD,
+    input [3:0] year_value_last_4,
+    input [3:0] month_value,
+    input [4:0] day_value,
+    input [1:0] set,
     output reg[1:0] days_in_month
 );
 
@@ -10,8 +11,9 @@ module find_days_in_month (
     reg [3:0] month_value_check;
 
     always @ (*) begin
-		  leap = (~(|year_value_last_4[1:0])) & ((|year_BCD) | ~(|year_value_last_4[3:2]));
-        month_value_check = mode ? ((month_value==1) ? 4'b1100 : month_value - 1) : month_value;
+		leap = (~(|year_value_last_4[1:0])) & ((|year_BCD) | ~(|year_value_last_4[3:2]));
+        // only check for the previous month when count day to 1 and set = 01 (count down)
+        month_value_check = ((set == 2'b01) && (day_value == 5'b00001)) ? ((month_value==1) ? 4'b1100 : month_value - 1) : month_value;
         case (month_value_check)
             4'b0001: full = 1;
             4'b0010: full = 0;
@@ -28,7 +30,7 @@ module find_days_in_month (
             default: full = 0;
         endcase
         notFeb = |month_value_check[3:2] | ~month_value_check[1] | month_value_check[0];
-		  days_in_month = {notFeb, (notFeb ? full : leap)};
+		days_in_month = {notFeb, (notFeb ? full : leap)};
     end
 
 endmodule
