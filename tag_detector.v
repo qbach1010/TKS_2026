@@ -10,7 +10,7 @@ module posedge_detector (
 
 endmodule
 
-module hold_detector # (parameter MAX_HOLD = 50000000, MAX_REPEAT = 10000000) (
+module hold_detector # (parameter MAX_HOLD = 50_000_000, MAX_REPEAT = 10_000_000) (
     input in, clk, rst_n, output out
 );
     reg [$clog2(MAX_HOLD)-1 : 0] count;
